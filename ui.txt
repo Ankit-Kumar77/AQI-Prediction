@@ -1,0 +1,95 @@
+import streamlit as st
+import joblib
+import datetime
+
+# Use caching to load the model only once, improving performance.
+@st.cache_resource
+def load_model(model_path='rf_model.pkl'):
+    """
+    Loads the pre-trained model from a file.
+    Handles FileNotFoundError and other exceptions.
+    """
+    try:
+        model = joblib.load(model_path)
+        return model
+    except FileNotFoundError:
+        st.error(f"Error: Model file not found at '{model_path}'.")
+        st.error("Please ensure the 'rf_model.pkl' file is in the same directory as 'app.py'.")
+        return None
+    except Exception as e:
+        st.error(f"An error occurred while loading the model: {e}")
+        return None
+
+def main():
+    """
+    Main function to define the Streamlit application's UI and logic.
+    """
+    st.title('CO Concentration Prediction')
+    st.markdown("""
+    This application predicts the true hourly averaged concentration of Carbon Monoxide (CO),
+    based on readings from 5 metal oxide chemical sensors.
+    """)
+
+    # Load the model
+    model = load_model()
+
+    # If the model isn't loaded, stop the app execution.
+    if model is None:
+        return
+
+    st.sidebar.header("Input Features")
+
+    # --- Sensor Readings ---
+    st.sidebar.subheader("Sensor Readings")
+    s1_co = st.sidebar.number_input('Tin oxide sensor (PT08.S1)', help="Sensor reading targeted to CO", value=0.0)
+    s2_nmhc = st.sidebar.number_input('Titania sensor (PT08.S2)', help="Sensor reading targeted to Non-Methane Hydrocarbons (NMHC)", value=0.0)
+    s3_nox = st.sidebar.number_input('Tungsten oxide sensor (PT08.S3)', help="Sensor reading targeted to Nitrogen Oxides (NOx)", value=0.0)
+    s4_no2 = st.sidebar.number_input('Tungsten oxide sensor (PT08.S4)', help="Sensor reading targeted to Nitrogen Dioxide (NO2)", value=0.0)
+    s5_o3 = st.sidebar.number_input('Indium oxide sensor (PT08.S5)', help="Sensor reading targeted to Ozone (O3)", value=0.0)
+
+    # --- Environmental Factors ---
+    st.sidebar.subheader("Environmental Factors")
+    temp = st.sidebar.number_input("Temperature (°C)", value=25.0)
+    rh = st.sidebar.number_input("Relative Humidity (%)", value=50.0)
+    ah = st.sidebar.number_input("Absolute Humidity", value=1.0)
+
+    # --- Date and Time ---
+    st.sidebar.subheader("Date and Time")
+    d = st.sidebar.date_input("Date", datetime.date.today())
+    t = st.sidebar.time_input("Time", datetime.time(12, 0))
+
+    # A button in the sidebar to trigger the prediction
+    if st.sidebar.button("Predict CO Concentration"):
+        # Combine date and time to extract features
+        dt_object = datetime.datetime.combine(d, t)
+        year = dt_object.year
+        month = dt_object.month
+        day = dt_object.day
+        hour = dt_object.hour
+        day_of_week = dt_object.weekday()  # Monday=0, Sunday=6
+        week_of_year = dt_object.isocalendar().week
+
+        # IMPORTANT: The order of features must match the order used during model training.
+        # The following order is an educated guess. If predictions are still incorrect,
+        # you may need to verify the feature order from your training script.
+        user_features = [[
+            s1_co, s2_nmhc, s3_nox, s4_no2, s5_o3,  # Sensor features
+            temp, rh, ah,                            # Environmental features
+            year, month, day, hour, day_of_week, week_of_year  # Time features
+        ]]
+
+        try:
+            prediction = model.predict(user_features)
+
+            st.subheader("Prediction Result")
+            # Use st.success for better visual feedback on the result.
+            st.success(f"Predicted CO(GT) Concentration: **{prediction[0]:.2f} mg/m³**")
+            st.info("Note: This prediction is based on the 14 input features provided in the sidebar.")
+
+        except Exception as e:
+            st.error(f"An error occurred during prediction: {e}")
+    else:
+        st.info("Enter the 14 features in the sidebar and click 'Predict CO Concentration' to see the result.")
+
+if __name__ == "__main__":
+    main()
