@@ -27,79 +27,11 @@ def main():
     """
 
     # --- Custom CSS for Professional Look ---
-    st.markdown(
-        """
-        <style>
-        .main-title {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 0.2em;
-            text-align: center;
-            letter-spacing: 1px;
-        }
-        .subtitle {
-            font-size: 1.2rem;
-            color: #222;
-            text-align: center;
-            margin-bottom: 2em;
-        }
-        .stButton > button {
-            background-color: #e3f6fd;
-            color: #111;
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 0.5em 2em;
-            margin-top: 1em;
-            border: 1px solid #b5c9d6;
-            box-shadow: 0 2px 8px rgba(58,80,107,0.04);
-        }
-        .stButton > button:hover {
-            background-color: #b5c9d6;
-            color: #111;
-        }
-        .st-expanderHeader {
-            font-size: 1.1rem;
-            color: #111;
-        }
-        .st-bb {
-            margin-bottom: 1.5em;
-        }
-        .st-cb {
-            margin-bottom: 1em;
-        }
-        .stApp {
-            background: linear-gradient(135deg, #f7faff 0%, #e3f6fd 100%);
-        }
-        /* Input field contrast for light background */
-        input, .stNumberInput input, .stTextInput input, .stDateInput input, .stTimeInput input {
-            background-color: #fff !important;
-            color: #111 !important;
-            border: 1px solid #b5c9d6 !important;
-        }
-        label, .st-cb, .st-bb, .stNumberInput label, .stTextInput label, .stDateInput label, .stTimeInput label {
-            color: #111 !important;
-            font-weight: 500;
-        }
-        .stNumberInput, .stTextInput, .stDateInput, .stTimeInput {
-            margin-bottom: 1em !important;
-        }
-        /* Center columns and fix alignment */
-        section[data-testid="stHorizontalBlock"] > div {
-            align-items: flex-start !important;
-            justify-content: center !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown('<div class="main-title">AQI Prediction</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="subtitle">'
-        'This application predicts the Air Quality Index (AQI) based on sensor readings, environmental factors, and time information.'
-        '</div>', unsafe_allow_html=True
-    )
+    st.title('AQI Prediction')
+    st.markdown("""
+    This application predicts the Air Quality Index (AQI) based on sensor readings,
+    environmental factors, and time information.
+    """)
 
     # Load the model
     model = load_model()
@@ -109,7 +41,7 @@ def main():
         return
 
     # --- Feature Importance Section ---
-    st.markdown("<h4 style='color:#111; margin-bottom:0.5em;'>Model Insights</h4>", unsafe_allow_html=True)
+    st.header("Model Insights")
     with st.expander("View Feature Importances"):
         try:
             # Define feature names in the same order as the training data
@@ -136,14 +68,14 @@ def main():
             st.error(f"Could not display feature importances: {e}")
 
 
-    st.markdown("<h4 style='color:#111; margin-bottom:0.5em;'>Input Features</h4>", unsafe_allow_html=True)
+    st.header("Input Features")
     st.markdown("<div style='margin-bottom:1.5em'></div>", unsafe_allow_html=True)
 
     # Use columns for a cleaner layout on the main page
     col1, col2, col3 = st.columns([1.1, 1, 1])
 
     with col1:
-        st.markdown("<div style='font-weight:600; color:#111; margin-bottom:0.5em;'>Sensor Readings</div>", unsafe_allow_html=True)
+        st.subheader("Sensor Readings")
         s1_co = st.number_input('Tin oxide sensor (PT08.S1)', help="Sensor reading targeted to CO", value=0.0, key='s1')
         s2_nmhc = st.number_input('Titania sensor (PT08.S2)', help="Sensor reading targeted to Non-Methane Hydrocarbons (NMHC)", value=0.0, key='s2')
         s3_nox = st.number_input('Tungsten oxide sensor (PT08.S3)', help="Sensor reading targeted to Nitrogen Oxides (NOx)", value=0.0, key='s3')
@@ -151,25 +83,22 @@ def main():
         s5_o3 = st.number_input('Indium oxide sensor (PT08.S5)', help="Sensor reading targeted to Ozone (O3)", value=0.0, key='s5')
 
     with col2:
-        st.markdown("<div style='font-weight:600; color:#111; margin-bottom:0.5em;'>Environmental Factors</div>", unsafe_allow_html=True)
+        st.subheader("Environmental Factors")
         temp = st.number_input("Temperature (°C)", value=25.0, key='temp')
         rh = st.number_input("Relative Humidity (%)", value=50.0, key='rh')
         ah = st.number_input("Absolute Humidity", value=1.0, key='ah')
 
     with col3:
-        st.markdown("<div style='font-weight:600; color:#111; margin-bottom:0.5em;'>Date and Time</div>", unsafe_allow_html=True)
+        st.subheader("Date and Time")
         d = st.date_input("Date", datetime.date.today(), key='date')
         t = st.time_input("Time", datetime.time(12, 0), key='time')
 
-    st.markdown("<div style='margin-bottom:2em'></div>", unsafe_allow_html=True)
+    st.write("")  # Add a little vertical space
 
 
     # Center the button using columns
-    btn_col1, btn_col2, btn_col3 = st.columns([2, 1, 2])
-    with btn_col2:
-        predict_clicked = st.button("Predict AQI", use_container_width=True)
-
-    if predict_clicked:
+    # A button to trigger the prediction
+    if st.button("Predict AQI"):
         # Combine date and time to extract features
         dt_object = datetime.datetime.combine(d, t)
         year = dt_object.year
@@ -189,13 +118,8 @@ def main():
         try:
             prediction = model.predict(user_features)
 
-            st.markdown("<div style='margin-top:2em'></div>", unsafe_allow_html=True)
-            st.markdown(
-                f"<div style='background-color:#e3f6fd; border-radius:10px; padding:1.5em; text-align:center; margin-bottom:1em; border: 1px solid #b5c9d6;'>"
-                f"<span style='font-size:1.5rem; color:#111; font-weight:700;'>Predicted AQI: {prediction[0]:.2f}</span>"
-                "</div>",
-                unsafe_allow_html=True
-            )
+            st.subheader("Prediction Result")
+            st.success(f"Predicted AQI: **{prediction[0]:.2f}**")
             st.info("Note: This prediction is based on the 14 input features provided above.")
 
         except Exception as e:
