@@ -33,20 +33,20 @@ def main():
         .main-title {
             font-size: 2.8rem;
             font-weight: 700;
-            color: #3a506b;
+            color: #2d3748;
             margin-bottom: 0.2em;
             text-align: center;
             letter-spacing: 1px;
         }
         .subtitle {
             font-size: 1.2rem;
-            color: #5c677d;
+            color: #4a5568;
             text-align: center;
             margin-bottom: 2em;
         }
         .stButton > button {
             background-color: #e3f6fd;
-            color: #3a506b;
+            color: #2d3748;
             font-weight: 600;
             border-radius: 8px;
             padding: 0.5em 2em;
@@ -60,10 +60,23 @@ def main():
         }
         .st-expanderHeader {
             font-size: 1.1rem;
-            color: #3a506b;
+            color: #2d3748;
         }
         .stApp {
             background: linear-gradient(135deg, #e3f6fd 0%, #f7faff 100%);
+        }
+        /* Improve input field contrast */
+        input, .stNumberInput input, .stTextInput input, .stDateInput input, .stTimeInput input {
+            background-color: #ffffff !important;
+            color: #2d3748 !important;
+            border: 1px solid #b5c9d6 !important;
+        }
+        label, .st-cb, .st-bb, .stNumberInput label, .stTextInput label, .stDateInput label, .stTimeInput label {
+            color: #2d3748 !important;
+            font-weight: 500;
+        }
+        .stNumberInput, .stTextInput, .stDateInput, .stTimeInput {
+            margin-bottom: 1em !important;
         }
         </style>
         """,
