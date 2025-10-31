@@ -27,7 +27,7 @@ def main():
     """
 
     # --- Custom CSS for Professional Look ---
-    st.title('AQI Prediction')
+    st.title('AQI Prediction System')
     st.markdown("""
     This application predicts the Air Quality Index (AQI) based on sensor readings,
     environmental factors, and time information.

@@ -1,9 +1,26 @@
+
 # AQI Prediction Streamlit Application
 
 This is an interactive web application built with Streamlit that predicts the Air Quality Index (AQI) based on sensor readings, environmental factors, and time-based features. The application uses a pre-trained Random Forest Regressor model to make predictions in real-time.
 
- 
-*(Note: You can replace the above URL with a link to a screenshot of your application.)*
+---
+
+## Live Demo
+
+You can try the live demo here:
+
+> [Live Demo Link](https://aqi-prediction-ju6beuslnawofqmf8myipg.streamlit.app/) <!-- Replace # with your deployed app URL, e.g., on Streamlit Cloud or Hugging Face Spaces -->
+
+---
+
+## Screenshots
+
+Below are screenshots of the AQI Prediction app in action:
+
+![App Main Page](screenshots/main_page.png)
+
+
+<!-- Place your screenshot images in a 'screenshots' folder in the project root. Update the image paths as needed. -->
 
 ---
 
