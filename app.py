@@ -33,46 +33,50 @@ def main():
         .main-title {
             font-size: 2.8rem;
             font-weight: 700;
-            color: #2d3748;
+            color: #2c3e50;
             margin-bottom: 0.2em;
             text-align: center;
             letter-spacing: 1px;
         }
         .subtitle {
             font-size: 1.2rem;
-            color: #4a5568;
+            color: #34495e;
             text-align: center;
             margin-bottom: 2em;
         }
         .stButton > button {
-            background-color: #e3f6fd;
-            color: #2d3748;
+            background-color: #2980b9;
+            color: white;
             font-weight: 600;
             border-radius: 8px;
             padding: 0.5em 2em;
             margin-top: 1em;
-            border: 1px solid #b5c9d6;
-            box-shadow: 0 2px 8px rgba(58,80,107,0.04);
         }
         .stButton > button:hover {
-            background-color: #b5c9d6;
-            color: #22223b;
+            background-color: #1abc9c;
+            color: #fff;
         }
         .st-expanderHeader {
             font-size: 1.1rem;
-            color: #2d3748;
+            color: #2980b9;
+        }
+        .st-bb {
+            margin-bottom: 1.5em;
+        }
+        .st-cb {
+            margin-bottom: 1em;
         }
         .stApp {
-            background: linear-gradient(135deg, #e3f6fd 0%, #f7faff 100%);
+            background-color: #23272f;
         }
-        /* Improve input field contrast */
+        /* Input field contrast for dark background */
         input, .stNumberInput input, .stTextInput input, .stDateInput input, .stTimeInput input {
-            background-color: #ffffff !important;
-            color: #2d3748 !important;
-            border: 1px solid #b5c9d6 !important;
+            background-color: #23272f !important;
+            color: #f7f9fa !important;
+            border: 1px solid #34495e !important;
         }
         label, .st-cb, .st-bb, .stNumberInput label, .stTextInput label, .stDateInput label, .stTimeInput label {
-            color: #2d3748 !important;
+            color: #f7f9fa !important;
             font-weight: 500;
         }
         .stNumberInput, .stTextInput, .stDateInput, .stTimeInput {
