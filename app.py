@@ -51,9 +51,7 @@ def main():
                 'Relative Humidity (%)', 'Absolute Humidity', 'Year', 'Month', 'Day', 'Hour',
                 'Day of Week', 'Week of Year'
             ]
-            
             importances = model.feature_importances_
-            
             feature_importance_df = pd.DataFrame({
                 'Feature': feature_names,
                 'Importance': importances
@@ -96,7 +94,6 @@ def main():
     st.write("")  # Add a little vertical space
 
 
-    # Center the button using columns
     # A button to trigger the prediction
     if st.button("Predict AQI"):
         # Combine date and time to extract features
@@ -116,6 +113,7 @@ def main():
         ]]
 
         try:
+            st.markdown("""---""")
             prediction = model.predict(user_features)
 
             st.subheader("Prediction Result")
