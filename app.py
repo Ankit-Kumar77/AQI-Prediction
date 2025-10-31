@@ -25,11 +25,60 @@ def main():
     """
     Main function to define the Streamlit application's UI and logic.
     """
-    st.title('AQI Prediction')
-    st.markdown("""
-    This application predicts the Air Quality Index (AQI) based on sensor readings,
-    environmental factors, and time information.
-    """)
+
+    # --- Custom CSS for Professional Look ---
+    st.markdown(
+        """
+        <style>
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.2em;
+            text-align: center;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #34495e;
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        .stButton > button {
+            background-color: #2980b9;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 0.5em 2em;
+            margin-top: 1em;
+        }
+        .stButton > button:hover {
+            background-color: #1abc9c;
+            color: #fff;
+        }
+        .st-expanderHeader {
+            font-size: 1.1rem;
+            color: #2980b9;
+        }
+        .st-bb {
+            margin-bottom: 1.5em;
+        }
+        .st-cb {
+            margin-bottom: 1em;
+        }
+        .stApp {
+            background-color: #f7f9fa;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown('<div class="main-title">AQI Prediction</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="subtitle">'
+        'This application predicts the Air Quality Index (AQI) based on sensor readings, environmental factors, and time information.'
+        '</div>', unsafe_allow_html=True
+    )
 
     # Load the model
     model = load_model()
@@ -39,7 +88,7 @@ def main():
         return
 
     # --- Feature Importance Section ---
-    st.header("Model Insights")
+    st.markdown("<h4 style='color:#2c3e50; margin-bottom:0.5em;'>Model Insights</h4>", unsafe_allow_html=True)
     with st.expander("View Feature Importances"):
         try:
             # Define feature names in the same order as the training data
@@ -58,8 +107,6 @@ def main():
             }).sort_values(by='Importance', ascending=False)
 
             st.write("This chart shows how much each feature contributes to the model's predictions.")
-            
-            # Use st.bar_chart, which works well with DataFrames where the index is the category.
             st.bar_chart(feature_importance_df.set_index('Feature'))
 
         except AttributeError:
@@ -67,37 +114,41 @@ def main():
         except Exception as e:
             st.error(f"Could not display feature importances: {e}")
 
-    st.header("Input Features")
+
+    st.markdown("<h4 style='color:#2c3e50; margin-bottom:0.5em;'>Input Features</h4>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom:1.5em'></div>", unsafe_allow_html=True)
 
     # Use columns for a cleaner layout on the main page
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1.1, 1, 1])
 
     with col1:
-        # --- Sensor Readings ---
-        st.subheader("Sensor Readings")
-        s1_co = st.number_input('Tin oxide sensor (PT08.S1)', help="Sensor reading targeted to CO", value=0.0)
-        s2_nmhc = st.number_input('Titania sensor (PT08.S2)', help="Sensor reading targeted to Non-Methane Hydrocarbons (NMHC)", value=0.0)
-        s3_nox = st.number_input('Tungsten oxide sensor (PT08.S3)', help="Sensor reading targeted to Nitrogen Oxides (NOx)", value=0.0)
-        s4_no2 = st.number_input('Tungsten oxide sensor (PT08.S4)', help="Sensor reading targeted to Nitrogen Dioxide (NO2)", value=0.0)
-        s5_o3 = st.number_input('Indium oxide sensor (PT08.S5)', help="Sensor reading targeted to Ozone (O3)", value=0.0)
+        st.markdown("<div style='font-weight:600; color:#2980b9; margin-bottom:0.5em;'>Sensor Readings</div>", unsafe_allow_html=True)
+        s1_co = st.number_input('Tin oxide sensor (PT08.S1)', help="Sensor reading targeted to CO", value=0.0, key='s1')
+        s2_nmhc = st.number_input('Titania sensor (PT08.S2)', help="Sensor reading targeted to Non-Methane Hydrocarbons (NMHC)", value=0.0, key='s2')
+        s3_nox = st.number_input('Tungsten oxide sensor (PT08.S3)', help="Sensor reading targeted to Nitrogen Oxides (NOx)", value=0.0, key='s3')
+        s4_no2 = st.number_input('Tungsten oxide sensor (PT08.S4)', help="Sensor reading targeted to Nitrogen Dioxide (NO2)", value=0.0, key='s4')
+        s5_o3 = st.number_input('Indium oxide sensor (PT08.S5)', help="Sensor reading targeted to Ozone (O3)", value=0.0, key='s5')
 
     with col2:
-        # --- Environmental Factors ---
-        st.subheader("Environmental Factors")
-        temp = st.number_input("Temperature (°C)", value=25.0)
-        rh = st.number_input("Relative Humidity (%)", value=50.0)
-        ah = st.number_input("Absolute Humidity", value=1.0)
+        st.markdown("<div style='font-weight:600; color:#2980b9; margin-bottom:0.5em;'>Environmental Factors</div>", unsafe_allow_html=True)
+        temp = st.number_input("Temperature (°C)", value=25.0, key='temp')
+        rh = st.number_input("Relative Humidity (%)", value=50.0, key='rh')
+        ah = st.number_input("Absolute Humidity", value=1.0, key='ah')
 
     with col3:
-        # --- Date and Time ---
-        st.subheader("Date and Time")
-        d = st.date_input("Date", datetime.date.today())
-        t = st.time_input("Time", datetime.time(12, 0))
+        st.markdown("<div style='font-weight:600; color:#2980b9; margin-bottom:0.5em;'>Date and Time</div>", unsafe_allow_html=True)
+        d = st.date_input("Date", datetime.date.today(), key='date')
+        t = st.time_input("Time", datetime.time(12, 0), key='time')
 
-    st.write("") # Add a little vertical space
+    st.markdown("<div style='margin-bottom:2em'></div>", unsafe_allow_html=True)
 
-    # A button to trigger the prediction
-    if st.button("Predict AQI"):
+
+    # Center the button using columns
+    btn_col1, btn_col2, btn_col3 = st.columns([2, 1, 2])
+    with btn_col2:
+        predict_clicked = st.button("Predict AQI", use_container_width=True)
+
+    if predict_clicked:
         # Combine date and time to extract features
         dt_object = datetime.datetime.combine(d, t)
         year = dt_object.year
@@ -117,9 +168,13 @@ def main():
         try:
             prediction = model.predict(user_features)
 
-            st.subheader("Prediction Result")
-            # Use st.success for better visual feedback on the result.
-            st.success(f"Predicted AQI: **{prediction[0]:.2f}**")
+            st.markdown("<div style='margin-top:2em'></div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='background-color:#eafaf1; border-radius:10px; padding:1.5em; text-align:center; margin-bottom:1em;'>"
+                f"<span style='font-size:1.5rem; color:#16a085; font-weight:700;'>Predicted AQI: {prediction[0]:.2f}</span>"
+                "</div>",
+                unsafe_allow_html=True
+            )
             st.info("Note: This prediction is based on the 14 input features provided above.")
 
         except Exception as e:
