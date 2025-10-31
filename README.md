@@ -17,7 +17,7 @@ You can try the live demo here:
 
 Below are screenshots of the AQI Prediction app in action:
 
-![App Main Page](screenshots/main_page.png)
+![App Main Page](ss.png)
 
 
 <!-- Place your screenshot images in a 'screenshots' folder in the project root. Update the image paths as needed. -->
